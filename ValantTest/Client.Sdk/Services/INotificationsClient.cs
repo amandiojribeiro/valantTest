@@ -1,9 +1,9 @@
 ﻿namespace ValantTest.Client.Sdk.Services
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Application.DTO;
-    using System;
 
     public interface INotificationsClient
     {

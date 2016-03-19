@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
-using ValantTest.Application.DTO;
-using ValantTest.Client.Sdk.Services;
-
-namespace Presentation.Web.Controllers
+﻿namespace Presentation.Web.Controllers
 {
+    using System;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
+    using ValantTest.Application.DTO;
+    using ValantTest.Client.Sdk.Services;
+
     public class InventoryController : Controller
     {
         private readonly InventoryClient inventoryClient;

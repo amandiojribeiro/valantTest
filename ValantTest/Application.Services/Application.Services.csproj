@@ -44,11 +44,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EventsDispatcherService\EventsDispatcherService.cs" />
+    <Compile Include="EventsDispatcherService\EventsDispatcherService.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
     <Compile Include="EventsDispatcherService\IEventsDispatcherService.cs" />
     <Compile Include="NotificationService\INotificationService.cs" />
     <Compile Include="InventoryService\IInventoryService.cs" />
-    <Compile Include="InventoryService\InventoryService.cs" />
+    <Compile Include="InventoryService\InventoryService.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
     <Compile Include="NotificationService\NotificationService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TypeAdapters\DtoAdapterProfilecs.cs" />

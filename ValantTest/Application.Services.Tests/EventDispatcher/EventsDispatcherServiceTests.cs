@@ -1,26 +1,26 @@
 ﻿namespace Application.Services.Tests.EventDispatcher
 {
     using System;
+    using System.Collections.Generic;
+    using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Moq;
-    using ValantTest.Domain.Core.TypedRepositories;
-    using ValantTest.Domain.Core.TypedGateways;
     using ValantTest.Application.Services.EventsDispatcher;
+    using ValantTest.Domain.Core.TypedGateways;
+    using ValantTest.Domain.Core.TypedRepositories;
+    using ValantTest.Domain.Model;
     using ValantTest.Infrastructure.CrossCutting.Adapters;
     using ValantTest.Infrastructure.CrossCutting.Adapters.Automapper;
-    using ValantTest.Domain.Model;
-    using System.Threading;
-    using System.Collections.Generic;
 
     [TestClass]
     public class EventDispatcherServicesTests
     {
+        private static readonly CancellationTokenSource ApplicationCancelationToken = new CancellationTokenSource();
+        private static Task eventDispatcherTask = null;
         private Mock<IItemRepository> itemRepository;
         private Mock<INotificationRepository> notificationRepository;
         private Mock<ISignalRGateway> gateway;
-        private static readonly CancellationTokenSource ApplicationCancelationToken = new CancellationTokenSource();
-        private static Task eventDispatcherTask = null;
 
         private Item FakeValidItem
         {
@@ -67,15 +67,15 @@
         [TestCategory("Dispatcher")]
         public void Event_Dispatcher_Initialize_Test()
         {
-            /// Setup
-            this.itemRepository.Setup(x => x.GetExpiredItemsByDate(It.IsAny<DateTime>())).Returns(Task.FromResult<List<Item>>(new List<Item>{ FakeValidItem }));
+            // Setup
+            this.itemRepository.Setup(x => x.GetExpiredItemsByDate(It.IsAny<DateTime>())).Returns(Task.FromResult<List<Item>>(new List<Item> { this.FakeValidItem }));
             this.itemRepository.Setup(x => x.RemoveExpiredItems(It.IsAny<DateTime>())).Returns(Task.FromResult(0));
-            this.notificationRepository.Setup(x => x.SaveNotificationAsync(It.IsAny<Notification>())).Returns(Task.FromResult<Notification>(FakeNotification));
+            this.notificationRepository.Setup(x => x.SaveNotificationAsync(It.IsAny<Notification>())).Returns(Task.FromResult<Notification>(this.FakeNotification));
             this.gateway.Setup(x => x.SendMessage(It.IsAny<Notification>())).Returns(Task.FromResult(0)); 
 
             var eventsDispatcherService = new EventsDispatcherService(this.notificationRepository.Object, this.itemRepository.Object, this.gateway.Object);
 
-            /// Act
+            // Act
             eventDispatcherTask = eventsDispatcherService.InitializeEventDispatcher(ApplicationCancelationToken.Token);
 
             Thread.Sleep(50);

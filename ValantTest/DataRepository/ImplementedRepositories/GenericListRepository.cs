@@ -1,9 +1,9 @@
 ﻿namespace ValantTest.Data.Repository.ImplementedRepositories
 {
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Domain.Core.RepositoryInterfaces;
-    using System.Collections.Concurrent;
 
     public abstract class GenericListRepository<TEntity> : IRepository<TEntity> where TEntity : class
     {

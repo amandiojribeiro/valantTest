@@ -1,14 +1,13 @@
 ﻿namespace ValantTest.Data.Gateway
 {
-    using System;
     using System.Diagnostics;
     using System.Net.Http;
     using System.Threading.Tasks;
     using Domain.Core.TypedGateways;
+    using Domain.Model;
     using Infrastructure.CrossCutting.Configuration;
     using Microsoft.AspNet.SignalR.Client;
     using Newtonsoft.Json;
-    using Domain.Model;
 
     public class SignalRGateway : ISignalRGateway
     {
@@ -19,7 +18,7 @@
         public SignalRGateway()
         {
             this.connection = new HubConnection(Settings.ServerUri);
-            this.hubProxy = connection.CreateHubProxy(Settings.HubName);
+            this.hubProxy = this.connection.CreateHubProxy(Settings.HubName);
         }
 
         public async Task SendMessage(Notification message)

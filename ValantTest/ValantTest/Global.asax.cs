@@ -1,13 +1,13 @@
 ﻿namespace ValantTest.Presentation.Api
 {
-    using System.Web.Http;
-    using Infrastructure.CrossCutting.Adapters;
-    using Infrastructure.CrossCutting.Adapters.Automapper;
+    using System;
+    using System.Diagnostics;
     using System.Threading;
     using System.Threading.Tasks;
+    using System.Web.Http;
     using Application.Services.EventsDispatcher;
-    using System.Diagnostics;
-    using System;
+    using Infrastructure.CrossCutting.Adapters;
+    using Infrastructure.CrossCutting.Adapters.Automapper;
 
     public class WebApiApplication : System.Web.HttpApplication
     {

@@ -89,7 +89,7 @@
         }
 
         [TestMethod]
-        [TestCategory ("Inventory")]
+        [TestCategory("Inventory")]
         public async Task Take_Item_By_Label_Not_Found_Test()
         {
             /// Setup
@@ -113,8 +113,8 @@
         public async Task Take_Item_By_Label_Found_Count_More_Than_Zero_Test()
         {
             /// Setup
-            this.itemRepository.Setup(x => x.GetItemByLablelAsync(It.IsAny<string>())).Returns(Task.FromResult<Item>(FakeValidItem));
-            this.notificationRepository.Setup(x => x.SaveNotificationAsync(It.IsAny<Notification>())).Returns(Task.FromResult<Notification>(FakeNotification));
+            this.itemRepository.Setup(x => x.GetItemByLablelAsync(It.IsAny<string>())).Returns(Task.FromResult<Item>(this.FakeValidItem));
+            this.notificationRepository.Setup(x => x.SaveNotificationAsync(It.IsAny<Notification>())).Returns(Task.FromResult<Notification>(this.FakeNotification));
             this.gateway.Setup(x => x.SendMessage(It.IsAny<Notification>())).Returns(Task.FromResult(0));
             this.itemRepository.Setup(x => x.UpdateAsync(It.IsAny<Item>())).Returns(Task.FromResult(0));
 
@@ -124,9 +124,9 @@
             var result = await inventoryService.TakeItemByLabel("Test");
 
             ///Assert
-            Assert.AreEqual(FakeValidItem.Label, result.Label);
-            Assert.AreEqual(FakeValidItem.Description, result.Description);
-            Assert.IsTrue(FakeValidItem.Count > result.Count);
+            Assert.AreEqual(this.FakeValidItem.Label, result.Label);
+            Assert.AreEqual(this.FakeValidItem.Description, result.Description);
+            Assert.IsTrue(this.FakeValidItem.Count > result.Count);
 
             this.itemRepository.Verify(
                x => x.UpdateAsync(It.IsAny<Item>()),
@@ -146,8 +146,8 @@
         public async Task Take_Item_By_Label_Found_Count_Is_Zero_Test()
         {
             /// Setup
-            this.itemRepository.Setup(x => x.GetItemByLablelAsync(It.IsAny<string>())).Returns(Task.FromResult<Item>(FakeValidItemWithOne));
-            this.notificationRepository.Setup(x => x.SaveNotificationAsync(It.IsAny<Notification>())).Returns(Task.FromResult<Notification>(FakeNotification));
+            this.itemRepository.Setup(x => x.GetItemByLablelAsync(It.IsAny<string>())).Returns(Task.FromResult<Item>(this.FakeValidItemWithOne));
+            this.notificationRepository.Setup(x => x.SaveNotificationAsync(It.IsAny<Notification>())).Returns(Task.FromResult<Notification>(this.FakeNotification));
             this.gateway.Setup(x => x.SendMessage(It.IsAny<Notification>())).Returns(Task.FromResult(0));
             this.itemRepository.Setup(x => x.UpdateAsync(It.IsAny<Item>())).Returns(Task.FromResult(0));
 
@@ -157,9 +157,9 @@
             var result = await inventoryService.TakeItemByLabel("Test");
 
             ///Assert
-            Assert.AreEqual(FakeValidItem.Label, result.Label);
-            Assert.AreEqual(FakeValidItem.Description, result.Description);
-            Assert.IsTrue(FakeValidItem.Count > result.Count);
+            Assert.AreEqual(this.FakeValidItem.Label, result.Label);
+            Assert.AreEqual(this.FakeValidItem.Description, result.Description);
+            Assert.IsTrue(this.FakeValidItem.Count > result.Count);
 
             this.itemRepository.Verify(
                x => x.DeleteAsync(It.IsAny<Item>()),
@@ -181,8 +181,8 @@
         {
             /// Setup
             this.itemRepository.Setup(x => x.GetItemByLablelAsync(It.IsAny<string>())).Returns(Task.FromResult<Item>(null));
-            this.itemRepository.Setup(x => x.SaveItemAsync(It.IsAny<Item>())).Returns(Task.FromResult<Item>(FakeValidItemWithOne));
-            this.notificationRepository.Setup(x => x.SaveNotificationAsync(It.IsAny<Notification>())).Returns(Task.FromResult<Notification>(FakeNotification));
+            this.itemRepository.Setup(x => x.SaveItemAsync(It.IsAny<Item>())).Returns(Task.FromResult<Item>(this.FakeValidItemWithOne));
+            this.notificationRepository.Setup(x => x.SaveNotificationAsync(It.IsAny<Notification>())).Returns(Task.FromResult<Notification>(this.FakeNotification));
             this.gateway.Setup(x => x.SendMessage(It.IsAny<Notification>())).Returns(Task.FromResult(0));
             this.itemRepository.Setup(x => x.UpdateAsync(It.IsAny<Item>())).Returns(Task.FromResult(0));
 
@@ -198,17 +198,17 @@
         {
             /// Setup
             this.itemRepository.Setup(x => x.GetItemByLablelAsync(It.IsAny<string>())).Returns(Task.FromResult<Item>(null));
-            this.itemRepository.Setup(x => x.SaveItemAsync(It.IsAny<Item>())).Returns(Task.FromResult<Item>(FakeValidItemWithOne));
+            this.itemRepository.Setup(x => x.SaveItemAsync(It.IsAny<Item>())).Returns(Task.FromResult<Item>(this.FakeValidItemWithOne));
             this.itemRepository.Setup(x => x.UpdateAsync(It.IsAny<Item>())).Returns(Task.FromResult(0));
 
             var inventoryService = new InventoryService(this.notificationRepository.Object, this.itemRepository.Object, this.gateway.Object);
 
             /// Act
-            var result = await inventoryService.SaveItem(FakeValidItemDto);
+            var result = await inventoryService.SaveItem(this.FakeValidItemDto);
 
             ///Assert
-            Assert.AreEqual(FakeValidItemDto.Label, result.Label);
-            Assert.AreEqual(FakeValidItemDto.Description, result.Description);
+            Assert.AreEqual(this.FakeValidItemDto.Label, result.Label);
+            Assert.AreEqual(this.FakeValidItemDto.Description, result.Description);
             Assert.AreEqual(result.Count, 1);
 
             this.itemRepository.Verify(
@@ -221,18 +221,18 @@
         public async Task Save_Item_Pass_Valid_ItemDto_Already_Exists_Test()
         {
             /// Setup
-            this.itemRepository.Setup(x => x.GetItemByLablelAsync(It.IsAny<string>())).Returns(Task.FromResult<Item>(FakeValidItem));
+            this.itemRepository.Setup(x => x.GetItemByLablelAsync(It.IsAny<string>())).Returns(Task.FromResult<Item>(this.FakeValidItem));
             this.itemRepository.Setup(x => x.UpdateAsync(It.IsAny<Item>())).Returns(Task.FromResult(0));
 
             var inventoryService = new InventoryService(this.notificationRepository.Object, this.itemRepository.Object, this.gateway.Object);
 
             /// Act
-            var result = await inventoryService.SaveItem(FakeValidItemDto);
+            var result = await inventoryService.SaveItem(this.FakeValidItemDto);
 
             ///Assert
-            Assert.AreEqual(FakeValidItem.Label, result.Label);
-            Assert.AreEqual(FakeValidItem.Description, result.Description);
-            Assert.IsTrue(FakeValidItem.Count < result.Count);
+            Assert.AreEqual(this.FakeValidItem.Label, result.Label);
+            Assert.AreEqual(this.FakeValidItem.Description, result.Description);
+            Assert.IsTrue(this.FakeValidItem.Count < result.Count);
 
             this.itemRepository.Verify(
                x => x.UpdateAsync(It.IsAny<Item>()),

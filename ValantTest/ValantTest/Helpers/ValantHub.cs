@@ -1,7 +1,7 @@
 ﻿namespace ValantTest.Presentation.Api.Helpers
 {
-    using Microsoft.AspNet.SignalR;
     using System.Diagnostics;
+    using Microsoft.AspNet.SignalR;
 
     public class ValantHub : Hub
     {

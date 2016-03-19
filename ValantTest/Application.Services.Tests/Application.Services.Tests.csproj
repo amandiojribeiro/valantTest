@@ -46,7 +46,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EventDispatcher\EventsDispatcherServiceTests.cs" />
-    <Compile Include="Inventory\InventoryServiceTests.cs" />
+    <Compile Include="Inventory\InventoryServiceTests.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
     <Compile Include="Notifications\NotificationsServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
