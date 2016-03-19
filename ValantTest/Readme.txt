@@ -23,7 +23,7 @@ simple and transparent way.
 
 Design
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-I've chosen a DDD (Domain Drive Design), I know that this kind of design 
+I've chosen a DDD (Domain Driven Design), I know that this kind of design 
 can come at a relatively high cost,
 However it's a great way for demonstrating maintainability, creative 
 collaboration, isolation and encapsulation.
