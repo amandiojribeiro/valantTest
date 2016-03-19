@@ -109,7 +109,7 @@
             if (result == undefined || result == '') {
                 throw "result must not be null or empty"
             }
-            modals.showAlert('success', '<strong>Great!</strong>  Item ' + result.Label + ' was taken');
+            modals.showAlert('success', '<strong>Great!</strong>  Item ' + result.Label + ' was added');
         }
 
         function takeItemCallback(result) {
@@ -118,7 +118,7 @@
                 modals.showAlert('warning', '<strong>Alert!</strong>  ' + result);
                 return
             }
-            modals.showAlert('success', '<strong>Great!</strong>  Item ' + result.Label +' was added');
+            modals.showAlert('success', '<strong>Great!</strong>  Item ' + result.Label + ' was taken');
         }
 
         function processAjaxError (jqXHR, exception) {
