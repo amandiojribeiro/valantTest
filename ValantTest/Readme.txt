@@ -10,7 +10,7 @@ Open the solution in Visual Studio, then left-click on Presentation.Api
 Choose Debug -> Start New Instance,
 
 Open your preferred browser and navigate to "http://localhost:42733/swagger/" 
-(I steed this by default).
+(I set this by default).
 (Usually visual studio will open a browser window pointing to the correct url)
 
 Please do the same operation after, for Presentation.Web and you will be 
