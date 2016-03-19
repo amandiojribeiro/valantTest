@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>ValantTest.Client.Sdk</id>
+    <version>1.0.0</version>
+    <authors>Amândio</authors>
+    <owners>Valant</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Valant Service Client SDK</description>
+    <releaseNotes>None.</releaseNotes>
+    <copyright>Copyright 2016</copyright>
+  </metadata>
+  <files>
+    <file src="bin\release\*Dto.dll"  target="lib\net452" />
+    <file src="bin\release\*Sdk.dll"  target="lib\net452" />
+  </files>
+</package>

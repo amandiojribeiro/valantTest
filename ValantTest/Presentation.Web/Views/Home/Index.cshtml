@@ -1,0 +1,236 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+<div class="jumbotron">
+    <div class="container-fluid" style="margin-top:30px;">
+        <div class="row ">
+            <div class="col-md-7">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <span class="spnTitle">Notifications</span>
+                    </div>
+                    <div class="panel-body" id="NotificationList" style="padding: 15px; font-size:small">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <span class="spnTitle">Manage Inventory</span>
+                    </div>
+                    <div class="panel-body" style="padding: 15px; font-size:small">
+                        <div class="input-group" style="padding-bottom:5px">
+                            <span class="input-group-addon" id="label">Label&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                            <input type="text" class="form-control" id="lblLabel" placeholder="Provide a label for item" aria-describedby="label">
+                        </div>
+                        <div class="input-group" style="padding-bottom:5px">
+                            <span class="input-group-addon" id="exDate">Expiration date&nbsp;</span>
+                            <input type="text" class="form-control" id="lblExDate" placeholder="Provide a date" aria-describedby="exDate">
+                        </div>     
+                        <div class="input-group" style="padding-bottom:5px">
+                            <span class="input-group-addon" id="description">Description&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                            <input type="text" class="form-control" id="lblDescription" placeholder="Provide a description for item" aria-describedby="description">
+                        </div>
+                        <button type="button" class="btn btn-default" style="float:right;" onclick="createItem($('#lblLabel').val(), $('#lblExDate').val(), $('#lblDescription').val())">Create Product</button>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="lblLabelTake" placeholder="Take one by label">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button" onclick="TakeItem($('#lblLabelTake').val())">Go!</button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts
+{
+    <script src="../../Scripts/jquery.signalr-2.2.0.js"></script>
+    <script type="text/javascript">
+        var createItemUrlAction = "@Url.Action("CreateItem", "Inventory")";
+        var takeItemUrlAction = "@Url.Action("TakeItemByLabel", "Inventory")";
+
+        $(function () {
+            //Set the hubs URL for the connection
+            $.connection = $.hubConnection('http://localhost:42733');
+            var proxy = $.connection.createHubProxy('valantHub');
+
+            proxy.on('sendMessage', function (message) {
+                var notificationObj = $.parseJSON(message);
+                if (notificationObj.Type == "1") {
+                    $("#NotificationList").append("<span class='glyphicon glyphicon-new-window' style='color:#ff5050' i-sm aria-hidden='true'></span>&nbsp;" + notificationObj.Description + "<br/>");
+                }
+                else {
+                    $("#NotificationList").append("<span class='glyphicon glyphicon-new-window' style='color:green' i-sm aria-hidden='true'></span>&nbsp;" + notificationObj.Description + "<br/>");
+                }
+            });
+
+            $.connection.start({ jsonp: true })
+                .done(function () { console.log('Now connected, connection ID=' + $.connection.id); $("#NotificationList").append("<span class='glyphicon glyphicon-new-window' style='color:green' i-sm aria-hidden='true'></span>&nbsp;" + 'Now connected, connection ID=' + $.connection.id + "<br/>"); })
+        });
+
+        function createItem(label, expirationDate, description) {
+            if (label == undefined || label == '') {
+                modals.showAlert('warning', '<strong>Error!</strong>  ' + "Label must not be null or empty");
+                return
+            }
+            if (expirationDate == undefined || expirationDate == '') {
+                modals.showAlert('warning', '<strong>Error!</strong>  ' + "Expiration Date must not be null or empty");
+                return
+            }
+            if (description == undefined || description == '') {
+                modals.showAlert('warning', '<strong>Error!</strong>  ' + "Description must not be null or empty");
+                return
+            }
+            modals.showPleaseWait();
+            var data={
+                label: label,
+                expirationDate: expirationDate,
+                description: description
+            };
+            wrapperAjax.post(createItemUrlAction, createItemCallback, data, processAjaxError)
+        }
+
+        function TakeItem(label) {
+            if (label == undefined || label == '') {
+                modals.showAlert('warning', '<strong>Error!</strong>  ' + "Label must not be null or empty");
+                return
+            }
+            modals.showPleaseWait();
+            var data = {
+                label: label,
+            };
+            wrapperAjax.post(takeItemUrlAction, takeItemCallback, data, processAjaxError)
+        }
+
+        function createItemCallback(result) {
+            modals.hidePleaseWait();
+            if (result == undefined || result == '') {
+                throw "result must not be null or empty"
+            }
+            modals.showAlert('success', '<strong>Great!</strong>  Item ' + result.Label + ' was taken');
+        }
+
+        function takeItemCallback(result) {
+            modals.hidePleaseWait();
+            if (result == undefined || result == 'Not Found') {
+                modals.showAlert('warning', '<strong>Alert!</strong>  ' + result);
+                return
+            }
+            modals.showAlert('success', '<strong>Great!</strong>  Item ' + result.Label +' was added');
+        }
+
+        function processAjaxError (jqXHR, exception) {
+            var msg = wrapperAjax.parseError(jqXHR, exception);
+            modals.hidePleaseWait();
+            modals.showAlert('warning', '<strong>Error!</strong>  ' + msg);
+        }
+
+        var wrapperAjax = wrapperAjax || (function () {
+            return {
+                get: function (url, callback, errorCalback) {
+                    var request = $.ajax({
+                        url: url,
+                        type: 'GET',
+                        success: callback,
+                        error: errorCalback
+                    });
+                },
+                post: function (url, callback, jsonData, errorCalback) {
+                    $.ajax({
+                        url: url,
+                        type: 'POST',
+                        data: jsonData,
+                        success: callback,
+                        error: errorCalback
+                    });
+                },
+                parseError: function (jqXHR, exception) {
+                    var msg = '';
+                    if (jqXHR.status === 0) {
+                        msg = 'Not connect.\n Verify Network.';
+                    } else if (jqXHR.status == 404) {
+                        msg = 'Requested page not found. [404]';
+                    } else if (jqXHR.status == 500) {
+                        msg = 'Internal Server Error [500].';
+                    } else if (exception === 'parsererror') {
+                        msg = 'Requested JSON parse failed.';
+                    } else if (exception === 'timeout') {
+                        msg = 'Time out error.';
+                    } else if (exception === 'abort') {
+                        msg = 'Ajax request aborted.';
+                    } else {
+                        msg = 'Uncaught Error.\n' + jqXHR.responseText;
+                    }
+                    return msg;
+                }
+            };
+        })();
+
+        var modals = modals || (function () {
+            var pleaseWaitDiv;
+            return {
+                showPleaseWait: function () {
+                    pleaseWaitDiv = $('<div class="modal fade" id="pleaseWaitDiv" data-backdrop="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"  data-keyboard="false">' +
+                                     '<div class="modal-dialog">' +
+                                       '<div class="modal-content">' +
+                                         '<div class="modal-header">' +
+                                           '<h4 class="modal-title" id="myModalLabel">Loading...</h4>' +
+                                         '</div>' +
+                                         '<div class="modal-body">' +
+                                           '<div class="progress">' +
+                                               '<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">' +
+                                                   '<span class="sr-only">45% Complete</span>' +
+                                               '</div>' +
+                                           '</div>' +
+                                         '</div>' +
+                                       '</div>' +
+                                     '</div>' +
+                                   '</div>');
+                    pleaseWaitDiv.appendTo("body").modal('show');
+                },
+                hidePleaseWait: function () {
+                    pleaseWaitDiv.modal('hide');
+                },
+                showAlert: function (type, message) {
+                    var alertDiv = $('<div class="modal fade" id="alertDiv" data-backdrop="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">' +
+                                      '<div class="modal-dialog modal-lg>' +
+                                        '<div class="modal-content">' +
+                                            '<div class="modal-header alert alert-' + type + '" role="alert"">' +
+                                                '<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="glyphicon glyphicon-remove-sign" style="color:#ff0000"></i></button>' +
+                                                  message +
+                                            '</div>' +
+                                        '</div>' +
+                                      '</div>' +
+                                    '</div>');
+                    alertDiv.appendTo("body").modal('show');
+                },
+                confirmModal: function (heading, question, cancelButtonTxt, okButtonTxt, callback) {
+                    var confirmModal = $('<div class="modal fade" id="confirmModalDiv" data-backdrop="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"  data-keyboard="false">' +
+                                      '<div class="modal-dialog">' +
+                                        '<div class="modal-content">' +
+                                          '<div class="modal-header">' +
+                                            '<h4 class="modal-title">' + heading + '</h4>' +
+                                          '</div>' +
+                                          '<div class="modal-body">' +
+                                            '<p>' + question + '</p>' +
+                                          '</div>' +
+                                          '<div class="modal-footer">' +
+                                             '<button type="button" id="cancelButton" class="btn btn-default" data-dismiss="modal">' + cancelButtonTxt + '</button>' +
+                                             '<button type="button" id="okButton" class="btn btn-primary">' + okButtonTxt + '</button>' +
+                                          '</div>' +
+                                        '</div>' +
+                                      '</div>' +
+                                    '</div>');
+                    confirmModal.appendTo("body").modal('show');
+
+                    confirmModal.find('#okButton').click(function (event) {
+                        callback();
+                        confirmModal.modal('hide');
+                    });
+                },
+            };
+        })();
+    </script>
+}
