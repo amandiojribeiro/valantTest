@@ -5,7 +5,7 @@
 How to run
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-Open the solution in Visual Studio, then left-click on Presentation.Api
+Open the solution in Visual Studio, then right-click on Presentation.Api
 
 Choose Debug -> Start New Instance,
 
