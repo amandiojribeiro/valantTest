@@ -40,6 +40,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nuget", "Nuget", "{766819BE-5860-41D7-AB8B-B440A849E12E}"
 	ProjectSection(SolutionItems) = preProject
 		Nuget\nuget.exe = Nuget\nuget.exe
+		Nuget\ValantTest.Client.Sdk.1.0.0.nupkg = Nuget\ValantTest.Client.Sdk.1.0.0.nupkg
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Presentation.Web", "Presentation.Web\Presentation.Web.csproj", "{684F7E6E-573C-4B08-8769-6AC25B65DCAA}"
