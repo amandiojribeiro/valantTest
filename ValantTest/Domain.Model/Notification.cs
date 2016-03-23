@@ -2,9 +2,20 @@
 {
     using System;
 
-    public class Notification
+    public class Notification : Entity<Guid>
     {
-        public Guid Id { get; set; }
+        public Guid Id
+        {
+             get
+            {
+                return this.Key;
+            }
+
+            set
+            {
+                this.Key = value;
+            }
+        }
 
         public int Type { get; set; }
 

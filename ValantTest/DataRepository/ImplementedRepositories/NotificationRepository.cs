@@ -7,7 +7,7 @@
     using Domain.Core.TypedRepositories;
     using Domain.Model;
 
-    public class NotificationRepository : GenericListRepository<Notification>, INotificationRepository
+    public class NotificationRepository : GenericListRepository<Notification, Guid>, INotificationRepository
     {
         public async Task<List<Notification>> GetNotificationsByDateAsync(DateTime date)
         {

@@ -42,6 +42,7 @@
                             try
                             {
                                 await this.Dispatch();
+                                Thread.Sleep(5000);
                             }
                             catch (Exception ex)
                             {

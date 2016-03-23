@@ -1,19 +1,24 @@
-﻿namespace ValantTest.Data.Repository.ImplementedRepositories
+﻿using System.Threading.Tasks;
+
+namespace ValantTest.Data.Repository.ImplementedRepositories
 {
+    using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Domain.Core.RepositoryInterfaces;
+    using System.Linq;
+    using Domain.Model;
 
-    public abstract class GenericListRepository<TEntity> : IRepository<TEntity> where TEntity : class
+    public abstract class GenericListRepository<TEntity, TId> : IRepository<TEntity, TId> where TEntity : Entity<TId>
     {
-        private static ConcurrentQueue<TEntity> entitiesList;
+        private static ConcurrentDictionary<TId, TEntity> entitiesList;
 
         public GenericListRepository()
         {
             if (entitiesList == null)
             {
-                entitiesList = new ConcurrentQueue<TEntity>();
+                entitiesList = new ConcurrentDictionary<TId, TEntity>();
             }
         }
 
@@ -21,30 +26,27 @@
         {
             await Task.Run(() =>
             {
-                entitiesList.TryDequeue(out entity);
+                entitiesList.TryRemove(entity.Key, out entity);
             });
         }
 
         public async Task<IEnumerable<TEntity>> GetAllAsync()
         {
-            return await Task.FromResult<IEnumerable<TEntity>>(entitiesList);
+            return await Task.FromResult<IEnumerable<TEntity>>(entitiesList.Select(x => x.Value).ToList());
         }
 
         public async Task InsertAsync(TEntity entity)
         {
             await Task.Run(() =>
             {
-                lock (entitiesList)
-                {
-                    entitiesList.Enqueue(entity);
-                }
+                entitiesList[entity.Key] = entity;
+
             });
         }
 
-        public async Task UpdateAsync(TEntity entityToUpdate)
+        public Task UpdateAsync(TEntity entity)
         {
-            await this.DeleteAsync(entityToUpdate);
-            await this.InsertAsync(entityToUpdate);
+            return this.InsertAsync(entity);
         }
     }
 }

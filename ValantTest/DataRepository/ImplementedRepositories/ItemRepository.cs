@@ -7,7 +7,7 @@
     using Domain.Core.TypedRepositories;
     using Domain.Model;
 
-    public class ItemRepository : GenericListRepository<Item>, IItemRepository
+    public class ItemRepository : GenericListRepository<Item, string>, IItemRepository
     {
         public async Task<List<Item>> GetExpiredItemsByDate(DateTime date)
         {

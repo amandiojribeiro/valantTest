@@ -2,11 +2,22 @@
 {
     using System;
 
-    public class Item
+    public class Item : Entity<string>
     {
         public Guid Id { get; set; }
 
-        public string Label { get; set; }
+        public string Label
+        {
+            get
+            {
+                return this.Key;
+            }
+
+            set
+            {
+                this.Key = value;
+            }
+        } 
 
         public string Description { get; set; }
 
