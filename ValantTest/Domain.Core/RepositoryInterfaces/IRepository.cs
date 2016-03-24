@@ -4,7 +4,7 @@
     using System.Threading.Tasks;
     using Model;
 
-    public interface IRepository<TEntity, TId> where TEntity : Entity<TId>
+    public interface IRepository<TEntity> where TEntity : class
     {
         /// <summary>
         /// Get all the entities of this repository.

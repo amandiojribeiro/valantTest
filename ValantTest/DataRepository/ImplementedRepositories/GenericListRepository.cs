@@ -10,7 +10,7 @@ namespace ValantTest.Data.Repository.ImplementedRepositories
     using System.Linq;
     using Domain.Model;
 
-    public abstract class GenericListRepository<TEntity, TId> : IRepository<TEntity, TId> where TEntity : Entity<TId>
+    public abstract class GenericListRepository<TEntity, TId> : IRepository<TEntity> where TEntity : Entity<TId>
     {
         private static ConcurrentDictionary<TId, TEntity> entitiesList;
 

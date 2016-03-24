@@ -8,7 +8,7 @@
     using RepositoryInterfaces;
 
     [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "Reviewed.")]
-    public interface IItemRepository : IRepository<Item, string>
+    public interface IItemRepository : IRepository<Item>
     {
         Task<Item> GetItemByLablelAsync(string label);
 
@@ -22,7 +22,7 @@
     }
 
     [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "Reviewed.")]
-    public interface INotificationRepository : IRepository<Notification, Guid>
+    public interface INotificationRepository : IRepository<Notification>
     {
         Task<List<Notification>> GetNotificationsByDateAsync(DateTime date);
 
